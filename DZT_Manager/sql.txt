@@ -1,0 +1,9 @@
+CREATE TABLE [TB_WJZ] (
+    [Id]         INT          IDENTITY (1, 1) NOT NULL,
+    [ExecDr]     VARCHAR (50) NULL,
+    [ExecDate]   DATETIME     NULL,
+    [CheckNum]   VARCHAR (50) NULL,
+    [CriticalID] VARCHAR (50) NULL,
+    [CreateTime] DATETIME     DEFAULT (getdate()) NULL,
+    CONSTRAINT [PK_TB_WJZ] PRIMARY KEY CLUSTERED ([Id] ASC)
+);

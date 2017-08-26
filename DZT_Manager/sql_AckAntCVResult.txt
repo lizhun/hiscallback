@@ -1,0 +1,11 @@
+CREATE TABLE dba.[TB_AckAntCVResult] (
+    [Id] INT IDENTITY (1, 1) NOT NULL,
+    [AntCVResultID]     VARCHAR(50) NULL,
+    [ReportType]   VARCHAR(50)     NULL,
+    [ExecDocCode]   VARCHAR (50) NULL,
+    [ExecDocName] VARCHAR (50) NULL,
+    [ExecDate] VARCHAR (50)  NULL,
+	[ExecTime] VARCHAR (50)  NULL,
+	[CheckNum] VARCHAR (50)   NULL,
+    CONSTRAINT [PK_TB_WJZ] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
