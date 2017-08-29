@@ -24,8 +24,8 @@ namespace BLL
             bool hasData = false;
             using (var con = new SqlConnection(this.GetDbCon(type.ToUpper())))
             {
-                var queryparams = new SqlParameter[] { new SqlParameter("@CheckNum", data.StudyNo) };
-                var datalist = SqlHelper.ExecuteReader(con, CommandType.Text, "select 1 from TB_AckAntCVResult where CheckNum=@CheckNum", queryparams);
+                var queryparams = new SqlParameter[] { new SqlParameter("@StudyNo", data.StudyNo) };
+                var datalist = SqlHelper.ExecuteReader(con, CommandType.Text, "select 1 from TB_AckAntCVResult where CheckNum=@StudyNo", queryparams);
                 if (datalist.Read())
                 {
                     hasData = true;
