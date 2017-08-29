@@ -12,7 +12,7 @@ namespace BLL
         public string ExecDocName { get; set; }
         public string ExecDate { get; set; }
         public string ExecTime { get; set; }
-        public string CheckNum { get; set; }
+        public string StudyNo { get; set; }
 
         public string ExecDateTime
         {

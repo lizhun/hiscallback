@@ -17,30 +17,14 @@ namespace BLL
             result = ConfigurationManager.ConnectionStrings[dbname].ConnectionString;
             return result;
 
-        }
-
-        private bool IsExsitData(string type, CriticalEntity data)
-        {
-            bool hasData = false;
-            using (var con = new SqlConnection(this.GetDbCon(type.ToUpper())))
-            {
-                var queryparams = new SqlParameter[] { new SqlParameter("@CheckNum", data.CheckNum) };
-                var datalist = SqlHelper.ExecuteReader(con, CommandType.Text, "select 1 from TB_WJZ where CheckNum=@CheckNum", queryparams);
-                if (datalist.Read())
-                {
-                    hasData = true;
-                }
-                datalist.Close();
-            }
-            return hasData;
-        }
+        } 
 
         private bool IsExsitAckAntCVResult(string type, AckAntCVResult data)
         {
             bool hasData = false;
             using (var con = new SqlConnection(this.GetDbCon(type.ToUpper())))
             {
-                var queryparams = new SqlParameter[] { new SqlParameter("@CheckNum", data.CheckNum) };
+                var queryparams = new SqlParameter[] { new SqlParameter("@CheckNum", data.StudyNo) };
                 var datalist = SqlHelper.ExecuteReader(con, CommandType.Text, "select 1 from TB_AckAntCVResult where CheckNum=@CheckNum", queryparams);
                 if (datalist.Read())
                 {
@@ -50,36 +34,7 @@ namespace BLL
             }
             return hasData;
         }
-
-        public void SaveOrUpdateCritical(string type, CriticalEntity data)
-        {
-            using (var con = new SqlConnection(this.GetDbCon(type.ToUpper())))
-            {
-                if (this.IsExsitData(type, data))
-                {
-
-                    var sqlparams = new SqlParameter[] { new SqlParameter("ExecDr", data.ExecDr) ,
-                    new SqlParameter("@CriticalID", data.CriticalID) ,
-                        new SqlParameter("@CheckNum", data.CheckNum),
-                        new SqlParameter("@ExecDate", data.ExecDate)};
-                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Update TB_WJZ set ExecDr=@ExecDr,ExecDate=@ExecDate 
-                                                  where CriticalID=@CriticalID", sqlparams);
-                }
-                else
-                {
-                    var sqlparams = new SqlParameter[] { new SqlParameter("ExecDr", data.ExecDr) ,
-                    new SqlParameter("@CriticalID", data.CriticalID) ,
-                        new SqlParameter("@CheckNum", data.CheckNum),
-                        new SqlParameter("@ExecDate", data.ExecDate)};
-                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_WJZ (CriticalID,CheckNum,ExecDr,ExecDate) 
-                                         VALUES (@CriticalID,@CheckNum,@ExecDr,@ExecDate)", sqlparams);
-
-                }
-                con.Close();
-            }
-
-        }
-
+       
         public void SaveOrUpdateAckAntCVResult(string type, AckAntCVResult data)
         {
             using (var con = new SqlConnection(this.GetDbCon(type.ToUpper())))
@@ -93,10 +48,10 @@ namespace BLL
                         new SqlParameter("@ExecDocName", data.ExecDocName),
                      new SqlParameter("@ExecDate", data.ExecDate),
                      new SqlParameter("@ExecTime", data.ExecTime),
-                     new SqlParameter("@CheckNum", data.CheckNum)};
+                     new SqlParameter("@StudyNo", data.StudyNo)};
                     SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Update TB_AckAntCVResult 
 set ReportType=@ReportType,ExecDocCode=@ExecDocCode,ExecDocName=@ExecDocName,
-ExecDate=@ExecDate,ExecTime=@ExecTime,CheckNum=@CheckNum 
+ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNo 
 where AntCVResultID=@AntCVResultID", sqlparams);
                 }
                 else
@@ -107,9 +62,9 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                         new SqlParameter("@ExecDocName", data.ExecDocName),
                      new SqlParameter("@ExecDate", data.ExecDate),
                      new SqlParameter("@ExecTime", data.ExecTime),
-                     new SqlParameter("@CheckNum", data.CheckNum)};
-                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_AckAntCVResult (AntCVResultID,ReportType,ExecDocCode,ExecDocName,ExecDate,ExecTime,CheckNum) 
-                                         VALUES (@AntCVResultID,@ReportType,@ExecDocCode,@ExecDocName,@ExecDate,@ExecTime,@CheckNum)", sqlparams);
+                     new SqlParameter("@StudyNo", data.StudyNo)};
+                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_AckAntCVResult (AntCVResultID,ReportType,ExecDocCode,ExecDocName,ExecDate,ExecTime,StudyNo) 
+                                         VALUES (@AntCVResultID,@ReportType,@ExecDocCode,@ExecDocName,@ExecDate,@ExecTime,@StudyNo)", sqlparams);
 
                 }
                 con.Close();
@@ -117,22 +72,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
 
         }
 
-        public CriticalEntity loadCriticalXml(string xml)
-        {
-            var data = new CriticalEntity();
-            var doc = new XmlDocument();
-            doc.LoadXml(xml);
-            var root = doc.SelectSingleNode("//ExecInfo");
-            if (root != null)
-            {
-                data.CriticalID = (root.SelectSingleNode("CriticalID")).InnerText;
-                data.ExecDate = DateTime.Parse((root.SelectSingleNode("ExecDate")).InnerText);
-                data.ExecDr = root.SelectSingleNode("ExecDr").InnerText;
-                string checknum = data.CriticalID.Split("_".ToCharArray())[1];
-                data.CheckNum = checknum;
-            }
-            return data;
-        }
+   
 
         public AckAntCVResult loadAckAntCVResultXml(string xml)
         {
@@ -149,7 +89,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                 data.ExecDate = (root.SelectSingleNode("ExecDate")).InnerText;
                 data.ExecTime = root.SelectSingleNode("ExecTime").InnerText;
                 string checknum = data.AntCVResultID.Split("_".ToCharArray())[1];
-                data.CheckNum = checknum;
+                data.StudyNo = checknum;
             }
             return data;
         }

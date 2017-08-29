@@ -27,30 +27,9 @@ namespace DZT_Manager
         public XmlDocument TestXmlInputOutput(XmlDocument xml)
         {
             return xml;
-        }
+        }       
 
-       
-
-        [WebMethod]
-        public XmlDocument CriticalExecBack(string data)
-        {
-            // try
-            // {
-            var manager = new BLL.HisCallBackManager();
-            var wjzdata = manager.loadCriticalXml(data);
-            string type = wjzdata.CriticalID.Split("_".ToCharArray())[0];
-            manager.SaveOrUpdateCritical(type, wjzdata);
-            var xml = new XmlDocument();
-            xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>成功</msg></Response>");
-            return xml;
-            // }
-            //catch (Exception e)
-            //{
-            //    var xml = new XmlDocument();
-            //    xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>500</code><msg>失败</msg></Response>");
-            //    return xml;
-            //}
-        }
+  
         
         [WebMethod]
         public XmlDocument AckAntCVResult(string data)
