@@ -25,7 +25,7 @@ namespace BLL
             using (var con = new SqlConnection(this.GetDbCon(type.ToUpper())))
             {
                 var queryparams = new SqlParameter[] { new SqlParameter("@StudyNo", data.StudyNo) };
-                var datalist = SqlHelper.ExecuteReader(con, CommandType.Text, "select 1 from TB_AckAntCVResult where CheckNum=@StudyNo", queryparams);
+                var datalist = SqlHelper.ExecuteReader(con, CommandType.Text, "select 1 from TB_AckAntCVResult where StudyNo=@StudyNo", queryparams);
                 if (datalist.Read())
                 {
                     hasData = true;
@@ -51,7 +51,7 @@ namespace BLL
                      new SqlParameter("@StudyNo", data.StudyNo)};
                     SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Update TB_AckAntCVResult 
 set ReportType=@ReportType,ExecDocCode=@ExecDocCode,ExecDocName=@ExecDocName,
-ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNo 
+ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNoj,LastUpateTime=@LastUpateTime
 where AntCVResultID=@AntCVResultID", sqlparams);
                 }
                 else
@@ -62,9 +62,10 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                         new SqlParameter("@ExecDocName", data.ExecDocName),
                      new SqlParameter("@ExecDate", data.ExecDate),
                      new SqlParameter("@ExecTime", data.ExecTime),
-                     new SqlParameter("@StudyNo", data.StudyNo)};
-                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_AckAntCVResult (AntCVResultID,ReportType,ExecDocCode,ExecDocName,ExecDate,ExecTime,StudyNo) 
-                                         VALUES (@AntCVResultID,@ReportType,@ExecDocCode,@ExecDocName,@ExecDate,@ExecTime,@StudyNo)", sqlparams);
+                     new SqlParameter("@StudyNo", data.StudyNo),
+                     new SqlParameter("@LastUpateTime", DateTime.Now)};
+                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_AckAntCVResult (AntCVResultID,ReportType,ExecDocCode,ExecDocName,ExecDate,ExecTime,StudyNo,LastUpateTime) 
+                                         VALUES (@AntCVResultID,@ReportType,@ExecDocCode,@ExecDocName,@ExecDate,@ExecTime,@StudyNo,@LastUpateTime)", sqlparams);
 
                 }
                 con.Close();
