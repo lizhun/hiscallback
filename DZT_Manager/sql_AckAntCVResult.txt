@@ -7,7 +7,7 @@ CREATE TABLE [TB_AckAntCVResult] (
 	[AuditDate]  VARCHAR(50) NULL,
 	[AuditTime]  VARCHAR(50) NULL,
 	[AuditDocCode]  VARCHAR(50) NULL,
-	[AuditDocname]  VARCHAR(50) NULL,
+	[AuditDocName]  VARCHAR(50) NULL,
 	[AuditComment]  VARCHAR(50) NULL,
 	[OrdName]  VARCHAR(50) NULL,
 	[Result]   VARCHAR(50) NULL,

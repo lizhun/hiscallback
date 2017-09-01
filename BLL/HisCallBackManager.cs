@@ -51,7 +51,7 @@ namespace BLL
                      new SqlParameter("@StudyNo", data.StudyNo)};
                     SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Update TB_AckAntCVResult 
 set ReportType=@ReportType,ExecDocCode=@ExecDocCode,ExecDocName=@ExecDocName,
-ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNoj,LastUpateTime=@LastUpateTime
+ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNo,LastUpateTime=@LastUpateTime
 where AntCVResultID=@AntCVResultID", sqlparams);
                 }
                 else
