@@ -48,10 +48,12 @@ namespace BLL
                         new SqlParameter("@ExecDocName", data.ExecDocName),
                      new SqlParameter("@ExecDate", data.ExecDate),
                      new SqlParameter("@ExecTime", data.ExecTime),
-                     new SqlParameter("@StudyNo", data.StudyNo)};
+                     new SqlParameter("@StudyNo", data.StudyNo),
+                     new SqlParameter("@LastUpateTime", DateTime.Now),
+                    new SqlParameter("@Status", 2)};
                     SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Update TB_AckAntCVResult 
 set ReportType=@ReportType,ExecDocCode=@ExecDocCode,ExecDocName=@ExecDocName,
-ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNo,LastUpateTime=@LastUpateTime
+ExecDate=@ExecDate,ExecTime=@ExecTime,StudyNo=@StudyNo,LastUpateTime=@LastUpateTime,Status=@Status  
 where AntCVResultID=@AntCVResultID", sqlparams);
                 }
                 else
@@ -63,9 +65,10 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                      new SqlParameter("@ExecDate", data.ExecDate),
                      new SqlParameter("@ExecTime", data.ExecTime),
                      new SqlParameter("@StudyNo", data.StudyNo),
+                     new SqlParameter("@Status", 2),
                      new SqlParameter("@LastUpateTime", DateTime.Now)};
-                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_AckAntCVResult (AntCVResultID,ReportType,ExecDocCode,ExecDocName,ExecDate,ExecTime,StudyNo,LastUpateTime) 
-                                         VALUES (@AntCVResultID,@ReportType,@ExecDocCode,@ExecDocName,@ExecDate,@ExecTime,@StudyNo,@LastUpateTime)", sqlparams);
+                    SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into TB_AckAntCVResult (AntCVResultID,ReportType,ExecDocCode,ExecDocName,ExecDate,ExecTime,StudyNo,LastUpateTime,Status) 
+                                         VALUES (@AntCVResultID,@ReportType,@ExecDocCode,@ExecDocName,@ExecDate,@ExecTime,@StudyNo,@LastUpateTime,@Status)", sqlparams);
 
                 }
                 con.Close();
