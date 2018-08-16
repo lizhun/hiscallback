@@ -27,10 +27,10 @@ namespace DZT_Manager
         public XmlDocument TestXmlInputOutput(XmlDocument xml)
         {
             return xml;
-        }       
+        }
 
-  
-        
+
+
         [WebMethod]
         public XmlDocument AckAntCVResult(string data)
         {
@@ -42,6 +42,28 @@ namespace DZT_Manager
             manager.SaveOrUpdateAckAntCVResult(type, wjzdata);
             var xml = new XmlDocument();
             xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>成功</msg></Response>");
+            return xml;
+            // }
+            //catch (Exception e)
+            //{
+            //    var xml = new XmlDocument();
+            //    xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>500</code><msg>失败</msg></Response>");
+            //    return xml;
+            //}
+        }
+
+        [WebMethod]
+        public XmlDocument SendAppBillResult(string data)
+        {
+            // try
+            // {
+            var manager = new BLL.HisCallBackManager();
+            var resdata = manager.LoadSendAppBillResult(data);
+           // manager.SaveSendAppBillResult(resdata);
+            var xml = new XmlDocument();
+            //xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>成功</msg></Response>");
+            xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>{resdata.OrdName}</msg></Response>");
+
             return xml;
             // }
             //catch (Exception e)
