@@ -59,10 +59,10 @@ namespace DZT_Manager
             // {
             var manager = new BLL.HisCallBackManager();
             var resdata = manager.LoadSendAppBillResult(data);
-           // manager.SaveSendAppBillResult(resdata);
+            manager.SaveSendAppBillResult(resdata);
             var xml = new XmlDocument();
-            //xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>成功</msg></Response>");
-            xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>{resdata.OrdName}</msg></Response>");
+            xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>成功</msg></Response>");
+            //  xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>{resdata.OrdName}</msg></Response>");
 
             return xml;
             // }
