@@ -267,7 +267,10 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                 new SqlParameter("@Cjccode", data.ArcimCode),
                 new SqlParameter("@Cjcxm", data.OrdName),
                 new SqlParameter("@Csexcode", sexcode),
-                new SqlParameter("@Chztypecode", Chztypecode)};
+                new SqlParameter("@Chztypecode", Chztypecode),
+                new SqlParameter("@cyzh", data.OrdRowID),
+                new SqlParameter("@cjzh", data.AdmNo),
+                new SqlParameter("@cdjh", data.RegNo)};
             return sqlparams1;
         }
 
@@ -294,7 +297,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                     new SqlParameter("@Bfeature", data.ClinicDiagnose),
                     new SqlParameter("@Senddr", data.OrdDoctor),
                     new SqlParameter("@DJZT", 0),
-                    new SqlParameter("@djh", data.RegNo)
+                    new SqlParameter("@yc", data.RegNo)
                 };
         }
     }
