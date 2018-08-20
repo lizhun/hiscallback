@@ -201,7 +201,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
             {
                 var sqlps = new SqlParameter[] { new SqlParameter("@strlen", "000"),
                     new SqlParameter("@Save", 0) };
-                var patid = SqlHelper.ExecuteScalar(con, CommandType.StoredProcedure, "GetPatID", sqlps).ToString();
+                var patid = SqlHelper.ExecuteScalar(con, CommandType.StoredProcedure, "patinfo.dba.GetPatID", sqlps).ToString();
                 SqlParameter[] sqlparams = Getyydjparas(data, patid);
                 var fieldstr = string.Join(",", sqlparams.Select(x => x.ParameterName.Replace("@", "")));
                 var valuestr = string.Join(",", sqlparams.Select(x => x.ParameterName));
