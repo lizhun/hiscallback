@@ -220,21 +220,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
         }
 
         private SqlParameter[] Getcommonparas(SendAppBillResult data, string patid, int cid)
-        {
-            var sexcode = 0;
-            switch (data.SexCode)
-            {
-                case "M":
-                    {
-                        sexcode = 1;
-                        break;
-                    }
-                case "F":
-                    {
-                        sexcode = 2;
-                        break;
-                    }           
-            }
+        {       
             var chztypecode = 9;
             var chztype = "其它";
             switch (data.AdmType?.ToUpper())
@@ -261,7 +247,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
             var sqlparams1 = new SqlParameter[] {
                 new SqlParameter("@Cid", cid),
                 new SqlParameter("@Cpatid", patid),
-                new SqlParameter("@Cblid", 0),
+                //new SqlParameter("@Cblid", 0),
                 new SqlParameter("@Chztype", chztype),
                 new SqlParameter("@Cpatname", data.Name),
                 new SqlParameter("@Croom", data.Room),
@@ -271,7 +257,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                 new SqlParameter("@Csendcode", data.OrdLocCode),
                 new SqlParameter("@Cjccode", data.ArcimCode),
                 new SqlParameter("@Cjcxm", data.OrdName),
-                new SqlParameter("@Csexcode", sexcode),
+                new SqlParameter("@Csexcode", data.SexCode),
                 new SqlParameter("@Chztypecode", chztypecode),
                 new SqlParameter("@cyzh", data.OrdRowID),
                 new SqlParameter("@cjzh", data.AdmNo),
