@@ -61,15 +61,13 @@ namespace DZT_Manager
             var resdata = manager.LoadSendAppBillResult(data);
             manager.SaveSendAppBillResult(resdata);
             var xml = new XmlDocument();
-            xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>成功</msg></Response>");
-            //  xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>{resdata.OrdName}</msg></Response>");
-
+            xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><ResultCode>0</ResultCode><ResultContent>成功</ResultContent></Response>");
             return xml;
             }
             catch (Exception e)
             {
                 var xml = new XmlDocument();
-                xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>500</code><msg>{e.Message}</msg></Response>");
+                xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><ResultCode>500</ResultCode><ResultContent>{e.Message}</ResultContent></Response>");
                 return xml;
             }
         }
