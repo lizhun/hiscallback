@@ -224,16 +224,16 @@ where AntCVResultID=@AntCVResultID", sqlparams);
             var sexcode = 0;
             switch (data.SexCode)
             {
-                case "F":
-                    {
-                        sexcode = 2;
-                        break;
-                    }
                 case "M":
                     {
                         sexcode = 1;
                         break;
                     }
+                case "F":
+                    {
+                        sexcode = 2;
+                        break;
+                    }           
             }
             var chztypecode = 9;
             var chztype = "其它";
