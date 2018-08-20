@@ -235,22 +235,26 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                         break;
                     }
             }
-            var Chztypecode = 9;
+            var chztypecode = 9;
+            var chztype = "其它";
             switch (data.AdmType?.ToUpper())
             {
                 case "O":
                     {
-                        Chztypecode = 1;
+                        chztypecode = 1;
+                        chztype = "门诊";
                         break;
                     }
                 case "E":
                     {
-                        Chztypecode = 2;
+                        chztypecode = 2;
+                        chztype = "急诊";
                         break;
                     }
                 case "I":
                     {
-                        Chztypecode = 3;
+                        chztypecode = 3;
+                        chztype = "住院";
                         break;
                     }
             }
@@ -258,7 +262,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                 new SqlParameter("@Cid", cid),
                 new SqlParameter("@Cpatid", patid),
                 new SqlParameter("@Cblid", 0),
-                new SqlParameter("@Chztype", data.AdmType),
+                new SqlParameter("@Chztype", chztype),
                 new SqlParameter("@Cpatname", data.Name),
                 new SqlParameter("@Croom", data.Room),
                 new SqlParameter("@Croomcode", data.RoomCode),
@@ -268,7 +272,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                 new SqlParameter("@Cjccode", data.ArcimCode),
                 new SqlParameter("@Cjcxm", data.OrdName),
                 new SqlParameter("@Csexcode", sexcode),
-                new SqlParameter("@Chztypecode", Chztypecode),
+                new SqlParameter("@Chztypecode", chztypecode),
                 new SqlParameter("@cyzh", data.OrdRowID),
                 new SqlParameter("@cjzh", data.AdmNo),
                 new SqlParameter("@cdjh", data.RegNo)};
