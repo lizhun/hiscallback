@@ -55,9 +55,9 @@ namespace DZT_Manager
         [WebMethod]
         public XmlDocument SendAppBillResult(string data)
         {
-            // try
-            // {
-            var manager = new BLL.HisCallBackManager();
+            try
+            {
+                var manager = new BLL.HisCallBackManager();
             var resdata = manager.LoadSendAppBillResult(data);
             manager.SaveSendAppBillResult(resdata);
             var xml = new XmlDocument();
@@ -65,13 +65,13 @@ namespace DZT_Manager
             //  xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>0</code><msg>{resdata.OrdName}</msg></Response>");
 
             return xml;
-            // }
-            //catch (Exception e)
-            //{
-            //    var xml = new XmlDocument();
-            //    xml.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>500</code><msg>失败</msg></Response>");
-            //    return xml;
-            //}
+            }
+            catch (Exception e)
+            {
+                var xml = new XmlDocument();
+                xml.LoadXml($"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><code>500</code><msg>{e.Message}</msg></Response>");
+                return xml;
+            }
         }
 
     }

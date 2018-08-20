@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
+using System.Linq;
 
 namespace BLL
 {
@@ -14,7 +15,8 @@ namespace BLL
     {
         public string GetDbConByOrdName(string OrdName)
         {
-            return ConfigurationManager.AppSettings[OrdName];
+            var conname = ConfigurationManager.AppSettings[OrdName];
+            return ConfigurationManager.ConnectionStrings[conname].ConnectionString;
         }
 
 
@@ -199,39 +201,60 @@ where AntCVResultID=@AntCVResultID", sqlparams);
             {
                 var sqlps = new SqlParameter[] { new SqlParameter("@strlen", "000"),
                     new SqlParameter("@Save", 0) };
-                var ds = SqlHelper.ExecuteDataset(con, CommandType.StoredProcedure, "GetPatID", sqlps);
-                var patid = ds.Tables[0].Rows[0]["patid"].ToString();
-                var sqlparams = new SqlParameter[] {
-                    new SqlParameter("@Bzyno", data.DocumentID) ,
-                    new SqlParameter("@yzh", data.OrdRowID),
-                    new SqlParameter("@patientid", data.CredentialNo),
-                    new SqlParameter("@jzh", data.AdmNo),
-                    new SqlParameter("@bpatage", data.Age),
-                    new SqlParameter("@pattel", data.Telephone),
-                    new SqlParameter("@patsex", data.Sex),
-                    new SqlParameter("@patname", data.Name),
-                    new SqlParameter("@bcwno", data.OrdLoc),
-                    new SqlParameter("@sendunit", data.OrdLoc),
-                    new SqlParameter("@patid", patid),
-                    new SqlParameter("@Bdate", data.BookDate),
-                    new SqlParameter("@Booktime", data.BookTime),
-                    new SqlParameter("@Pataddr", data.Address),
-                    new SqlParameter("@Pnative", data.Nation),
-                    new SqlParameter("@Bfeature", data.ClinicDiagnose),
-                    new SqlParameter("@Senddr", data.OrdDoctor),
-                    new SqlParameter("@djh", data.RegNo)};
-                SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into Yydj (Bzyno,yzh,patientid,jzh,bpatage,pattel,
-                                                        patsex,patname,bcwno,sendunit,patid,
-                                                       Bdate,Booktime,Pataddr,Pnative,Bfeature,Senddr,DJZT,djh) 
-                                                 VALUES (@Bzyno,@yzh,@patientid,@jzh,@bpatage,@pattel,
-                                                        @patsex,@patname,@bcwno,@sendunit,@patid,
-                                                        @Bdate,@Booktime,@Pataddr,@Pnative,@Bfeature,@Senddr,@DJZT,@djh);",
-                                                        sqlparams);
-
-
+                var patid = SqlHelper.ExecuteScalar(con, CommandType.StoredProcedure, "GetPatID", sqlps).ToString();
+                SqlParameter[] sqlparams = Getyydjparas(data, patid);
+                var fieldstr = string.Join(",", sqlparams.Select(x => x.ParameterName.Replace("@", "")));
+                var valuestr = string.Join(",", sqlparams.Select(x => x.ParameterName));
+                SqlHelper.ExecuteNonQuery(con, CommandType.Text,
+                    $"Insert into yydj ({fieldstr}) VALUES ({valuestr});", sqlparams);
                 var maxcid = SqlHelper.ExecuteScalar(con, CommandType.Text, "select isnull(max(cid),0) maxcid from communion").ToString();
                 var cid = int.Parse(maxcid) + 1;
-                var sqlparams1 = new SqlParameter[] {
+                SqlParameter[] sqlparams1 = Getcommonparas(data, patid, cid);
+                var fieldstr1 = string.Join(",", sqlparams1.Select(x => x.ParameterName.Replace("@", "")));
+                var valuestr1 = string.Join(",", sqlparams1.Select(x => x.ParameterName));
+                SqlHelper.ExecuteNonQuery(con, CommandType.Text,
+                    $"Insert into communion ({fieldstr1}) VALUES ({valuestr1});", sqlparams1);
+                con.Close();
+            }
+
+        }
+
+        private SqlParameter[] Getcommonparas(SendAppBillResult data, string patid, int cid)
+        {
+            var sexcode = 0;
+            switch (data.SexCode)
+            {
+                case "F":
+                    {
+                        sexcode = 2;
+                        break;
+                    }
+                case "M":
+                    {
+                        sexcode = 1;
+                        break;
+                    }
+            }
+            var Chztypecode = 9;
+            switch (data.AdmType?.ToUpper())
+            {
+                case "O":
+                    {
+                        Chztypecode = 1;
+                        break;
+                    }
+                case "E":
+                    {
+                        Chztypecode = 2;
+                        break;
+                    }
+                case "I":
+                    {
+                        Chztypecode = 3;
+                        break;
+                    }
+            }
+            var sqlparams1 = new SqlParameter[] {
                 new SqlParameter("@Cid", cid),
                 new SqlParameter("@Cpatid", patid),
                 new SqlParameter("@Chztype", data.AdmType),
@@ -242,16 +265,40 @@ where AntCVResultID=@AntCVResultID", sqlparams);
                 new SqlParameter("@Cwardcode", data.WardCode),
                 new SqlParameter("@Csendcode", data.OrdLocCode),
                 new SqlParameter("@Cjccode", data.ArcimCode),
-                new SqlParameter("@Cjcxm", data.OrdName)};
-                SqlHelper.ExecuteNonQuery(con, CommandType.Text, @"Insert into communion (Cpatid,Chztype,Croom,
-                                                                Croomcode,Cward,Cwardcode,Csendcode,Cjccode,Cjcxm) 
-                                                 VALUES @Cpatid,@Chztype,@Croom,
-                                                                @Croomcode,@Cward,@Cwardcode,@Csendcode,@Cjccode,@Cjcxm);",
-                                        sqlparams1);
-                con.Close();
-            }
-
+                new SqlParameter("@Cjcxm", data.OrdName),
+                new SqlParameter("@Csexcode", sexcode),
+                new SqlParameter("@Chztypecode", Chztypecode),
+                new SqlParameter("@cyzh", data.OrdRowID),
+                new SqlParameter("@cjzh", data.AdmNo),
+                new SqlParameter("@cdjh", data.RegNo)};
+            return sqlparams1;
         }
 
+        private SqlParameter[] Getyydjparas(SendAppBillResult data, string patid)
+        {
+            var agestr = data.Age?.Split("岁".ToCharArray());
+            var age = agestr == null ? 0 : int.Parse(agestr[0]);
+            return new SqlParameter[] {
+                    new SqlParameter("@Bzyno", data.DocumentID) ,
+                    new SqlParameter("@yzh", data.OrdRowID),
+                    new SqlParameter("@patientid", data.CredentialNo),
+                    new SqlParameter("@jzh", data.AdmNo),
+                    new SqlParameter("@bpatage", age),
+                    new SqlParameter("@pattel", data.Telephone),
+                    new SqlParameter("@patsex", data.Sex),
+                    new SqlParameter("@patname", data.Name),
+                    new SqlParameter("@bcwno", data.BedNo),
+                    new SqlParameter("@sendunit", data.OrdLoc),
+                    new SqlParameter("@patid", patid),
+                    new SqlParameter("@Bdate", data.BookDate),
+                    new SqlParameter("@Booktime", data.BookTime),
+                    new SqlParameter("@Pataddr", data.Address),
+                    new SqlParameter("@Pnative", data.Nation),
+                    new SqlParameter("@Bfeature", data.ClinicDiagnose),
+                    new SqlParameter("@Senddr", data.OrdDoctor),
+                    new SqlParameter("@DJZT", 0),
+                    new SqlParameter("@yc", data.RegNo)
+                };
+        }
     }
 }
