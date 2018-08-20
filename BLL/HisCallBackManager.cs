@@ -247,7 +247,7 @@ where AntCVResultID=@AntCVResultID", sqlparams);
             var sqlparams1 = new SqlParameter[] {
                 new SqlParameter("@Cid", cid),
                 new SqlParameter("@Cpatid", patid),
-                //new SqlParameter("@Cblid", 0),
+               // new SqlParameter("@Cblid", 0),
                 new SqlParameter("@Chztype", chztype),
                 new SqlParameter("@Cpatname", data.Name),
                 new SqlParameter("@Croom", data.Room),
